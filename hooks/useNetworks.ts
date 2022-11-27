@@ -9,7 +9,7 @@ export interface Networks {
 
 const NetworkMap: Networks = {
     DEFAULT: {
-        logo: require("../public/images/networks/default.png"),
+        logo: require("../public/images/networks/default.png").default.src,
         height: "30px"
     }
 }

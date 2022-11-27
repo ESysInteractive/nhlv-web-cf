@@ -29,6 +29,7 @@ interface APIGameTeams {
 interface APIGameTeam {
     score: number
     team: APITeam
+    leagueRecord: APITeamRecord
 }
 
 interface APITeam {
@@ -36,6 +37,13 @@ interface APITeam {
     name: string
     abbreviation: string
     teamName: string
+}
+
+interface APITeamRecord {
+    wins: number
+    losses: number
+    ot: number
+    type: string
 }
 
 interface APILinescore {
@@ -57,7 +65,7 @@ enum APIBroadcastType {
     AWAY = "away"
 }
 
-interface NHLGame {
+export interface NHLGame {
     id: number
     type: GameType
     season: string
@@ -65,7 +73,7 @@ interface NHLGame {
     status: GameStatus
     teams: APIGameTeams
     linescore: APILinescore
-    broadcasts?: Networks
+    networks?: Networks
 }
 
 enum GameType {
@@ -85,16 +93,16 @@ interface GameStatus {
     startTimeTBD: boolean
 }
 
-enum GameStatusCode {
-    SCHEDULED = 1,
-    PREGAME,
-    LIVE,
-    LIVE_CRITICAL,
-    CONCLUDED,
-    FINAL1,
-    FINAL2,
-    SCHEDULED_TBD,
-    PPD
+export enum GameStatusCode {
+    SCHEDULED = "1",
+    PREGAME = "2",
+    LIVE = "3",
+    LIVE_CRITICAL = "4",
+    CONCLUDED = "5",
+    FINAL1 = "6",
+    FINAL2 = "7",
+    SCHEDULED_TBD = "8",
+    PPD = "9"
 }
 
 export const fetchGames = async (startDate?: Moment, endDate?: Moment) => {
@@ -128,7 +136,7 @@ export const fetchGames = async (startDate?: Moment, endDate?: Moment) => {
                     status: apiGame.status,
                     teams: apiGame.teams,
                     linescore: apiGame.linescore,
-                    broadcasts: networks
+                    networks
                 };
     
                 gameArray.push(game);
