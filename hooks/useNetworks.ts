@@ -1,6 +1,13 @@
+export enum APIBroadcastType {
+    NATIONAL = "national",
+    HOME = "home",
+    AWAY = "away"
+}
+
 interface Network {
     logo: string
     height: string
+    type?: APIBroadcastType
 }
 
 export interface Networks {

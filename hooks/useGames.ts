@@ -1,5 +1,5 @@
 import moment, { Moment } from "moment-timezone";
-import { Networks, getNetwork } from "./useNetworks";
+import { APIBroadcastType, Networks, getNetwork } from "./useNetworks";
 
 interface APIResponse {
     dates: APIDate[]
@@ -60,11 +60,6 @@ interface APIBroadcast {
     language: string
 }
 
-enum APIBroadcastType {
-    HOME = "home",
-    AWAY = "away"
-}
-
 export interface NHLGame {
     id: number
     type: GameType
@@ -123,7 +118,10 @@ export const fetchGames = async (startDate?: Moment, endDate?: Moment) => {
 
                 if (apiGame.broadcasts) {
                     for (const broadcast of apiGame.broadcasts) {
-                        networks[broadcast.name] = getNetwork(broadcast.name);
+                        networks[broadcast.name] = {
+                            ...getNetwork(broadcast.name),
+                            type: broadcast.type
+                        };
                     }
                 }
 

@@ -14,6 +14,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import moment, { Moment } from "moment-timezone";
 import GameStatusMap from "../hooks/useGameStatus";
 import { NHLGame, GameStatusCode, fetchGames } from "../hooks/useGames";
+import { APIBroadcastType } from "../hooks/useNetworks";
 
 const ContainerHolder = styledComponent.div`
     margin-top: 50px;
@@ -205,13 +206,42 @@ const Games = () => {
                                             <Spacer />
                                             <NetworkHolder>
                                                 {game.networks && (
-                                                    Object.entries(game.networks).map(([key, value]) => (
-                                                        <a>
-                                                            <NetworkContainer>
-                                                                <Network src={value.logo} title={key} logoHeight={value.height} />
-                                                            </NetworkContainer>
-                                                        </a>
-                                                    ))
+                                                    (() => {
+                                                        const nationalNames: string[] = [];
+                                                        const national = Object.entries(game.networks).filter(([key, value]) => value.type === APIBroadcastType.NATIONAL && nationalNames.push(key));
+
+                                                        const homeNames: string[] = [];
+                                                        const home = Object.entries(game.networks).filter(([key, value]) => value.type === APIBroadcastType.HOME && homeNames.push(key));
+
+                                                        const awayNames: string[] = [];
+                                                        const away = Object.entries(game.networks).filter(([key, value]) => value.type === APIBroadcastType.AWAY && awayNames.push(key));
+
+                                                        return (
+                                                            <>
+                                                                {national.length > 0 && (
+                                                                    <a>
+                                                                        <NetworkContainer>
+                                                                            <Network src={national[0][1].logo} title={`National (${nationalNames.join(", ")})`} logoHeight={national[0][1].height} />
+                                                                        </NetworkContainer>
+                                                                    </a>
+                                                                )}
+                                                                {home.length > 0 && (
+                                                                    <a>
+                                                                        <NetworkContainer>
+                                                                            <Network src={home[0][1].logo} title={`Home (${homeNames.join(", ")})`} logoHeight={home[0][1].height} />
+                                                                        </NetworkContainer>
+                                                                    </a>
+                                                                )}
+                                                                {away.length > 0 && (
+                                                                    <a>
+                                                                        <NetworkContainer>
+                                                                            <Network src={away[0][1].logo} title={`Away (${awayNames.join(", ")})`} logoHeight={away[0][1].height} />
+                                                                        </NetworkContainer>
+                                                                    </a>
+                                                                )}
+                                                            </>
+                                                        )
+                                                    })()
                                                 )}
                                             </NetworkHolder>
                                         </Content>
